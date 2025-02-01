@@ -1,0 +1,68 @@
+swagger: "2.0"
+info:
+  title: "API de Categorias de Despesas"
+  description: "Endpoints para gerenciar categorias de despesas"
+  version: "1.0.0"
+paths:
+  /Expense/All:
+    get:
+      summary: "Recuperar todas as categorias de despesas"
+      responses:
+        200:
+          description: "Lista de categorias"
+          schema:
+            type: array
+            items:
+              properties:
+                name:
+                  type: string
+
+  /Expense:
+    post:
+      summary: "Criar uma nova categoria de despesa"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              name:
+                type: string
+                example: "Alimentação"
+              description:
+                type: string
+                example: "Alimentação diária"
+      responses:
+        201:
+          description: "Categoria criada com sucesso"
+
+  /BankAccount/All:
+    get:
+      summary: "Recuperar todas as contas de bancos"
+      responses:
+        200:
+          description: "Lista de bancos"
+          schema:
+            type: array
+            items:
+              properties:
+                name:
+                  type: string
+  /BankAccount:
+    post:
+      summary: "Criar uma nova categoria de despesa"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              name:
+                type: string
+                example: "Alimentação"
+              description:
+                type: string
+                example: "Alimentação diária"
+      responses:
+        201:
+          description: "Categoria criada com sucesso"
