@@ -1,7 +1,6 @@
-import json
 from models.BankAccount import BankAccount
 from db import store
-from flask import  jsonify
+
 
 class BankAccountService:
     def create(self, data: dict):
@@ -14,13 +13,13 @@ class BankAccountService:
                 return self.get_all()
         except Exception as e:
             return {"message": str(e)}
-        
+
     def get_all(self):
         """Recupera todas as categorias de despesas do banco de dados."""
         with store.open_session() as session:
             expenses = list(session.query(object_type=BankAccount))
-        
-        return [expense.__dict__ for expense in expenses]  
+
+        return [expense.__dict__ for expense in expenses]
 
     def get_by_id(self, bank_id: str):
         """Recupera uma categoria de despesa pelo ID."""
@@ -30,11 +29,12 @@ class BankAccountService:
         if bank is None:
             return {"message": "bank not found"}
 
-        return bank.__dict__ 
+        return bank.__dict__
 
     def get_by_name(self, name: str):
         """Recupera categorias de despesas que correspondem ao nome."""
         with store.open_session() as session:
-            banks = list(session.query(object_type=BankAccount).where_equals("name", name))
-        
-        return [bank.__dict__ for bank in banks] 
+            banks = list(session.query(
+                object_type=BankAccount).where_equals("name", name))
+
+        return [bank.__dict__ for bank in banks]

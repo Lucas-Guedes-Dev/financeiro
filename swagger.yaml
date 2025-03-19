@@ -3,6 +3,13 @@ info:
   title: "API de Categorias de Despesas"
   description: "Endpoints para gerenciar categorias de despesas"
   version: "1.0.0"
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: "Utilize o token JWT no formato 'Bearer <token>'"
+
 paths:
   /login:
     post:
@@ -12,19 +19,37 @@ paths:
           name: body
           required: true
           schema:
+            type: object
             properties:
               username:
                 type: string
-                example: "João Chaulin matador de porco"
+                example: "admin"
               password:
                 type: string
-                example: "p@ssword"
+                example: "senha"
       responses:
-        201:
-          description: "Categoria criada com sucesso"
+        200:
+          description: "Login bem-sucedido"
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        401:
+          description: "Credenciais inválidas"
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+                example: "Credenciais inválidas"
+
   /Expense/All:
     get:
       summary: "Recuperar todas as categorias de despesas"
+      security:
+        - BearerAuth: []
       responses:
         200:
           description: "Lista de categorias"
@@ -38,6 +63,8 @@ paths:
   /Expense:
     post:
       summary: "Criar uma nova categoria de despesa"
+      security:
+        - BearerAuth: []
       parameters:
         - in: body
           name: body
@@ -57,6 +84,8 @@ paths:
   /BankAccount/All:
     get:
       summary: "Recuperar todas as contas de bancos"
+      security:
+        - BearerAuth: []
       responses:
         200:
           description: "Lista de bancos"
@@ -66,21 +95,27 @@ paths:
               properties:
                 name:
                   type: string
+
   /BankAccount:
     post:
-      summary: "Criar uma nova categoria de despesa"
+      summary: "Criar uma nova conta bancária"
+      security:
+        - BearerAuth: []
       parameters:
         - in: body
           name: body
           required: true
           schema:
             properties:
-              name:
+              bank_name:
                 type: string
-                example: "Alimentação"
-              description:
+                example: "Banco do Brasil"
+              account_number:
                 type: string
-                example: "Alimentação diária"
+                example: "Numero da conta"
+              balance:
+                type: float
+                example: "Conta para despesas gerais"
       responses:
         201:
-          description: "Categoria criada com sucesso"
+          description: "Conta bancária criada com sucesso"

@@ -9,7 +9,7 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.json
-    print(data, 'olaaa')
+
     username = data.get("username")
     password = data.get("password")
 
@@ -20,9 +20,9 @@ def login():
         user = session.query(object_type=User).where_equals(
             "username", username).first()
 
-        if not user or not user.check_password(password):
+        if not user or not user.check_password(password, user.password):
             return jsonify({"msg": "Credenciais inválidas"}), 401
-
+        print(user.id)
         access_token = create_access_token(identity=user.id)
         return jsonify(access_token=access_token), 200
 
