@@ -10,8 +10,10 @@ bank_account_bp = Blueprint('bank_account', __name__)
 @bank_account_bp.route('/BankAccount/All', methods=['GET'])
 @jwt_required()
 def get_all_bank_account():
+    user_id = get_jwt_identity()
+
     service = BankAccountService()
-    return service.get_all(), 200
+    return service.get_all(user_id), 200
 
 
 @bank_account_bp.route('/BankAccount', methods=['POST'])

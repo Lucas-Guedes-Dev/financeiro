@@ -10,14 +10,16 @@ class BankAccountService:
             with store.open_session() as session:
                 session.store(bankAccount)
                 session.save_changes()
-                return self.get_all()
+                return self.get_all(bankAccount.user_id)
         except Exception as e:
             return {"message": str(e)}
 
-    def get_all(self):
+    def get_all(self, user_id: str):
         """Recupera todas as categorias de despesas do banco de dados."""
         with store.open_session() as session:
-            expenses = list(session.query(object_type=BankAccount))
+            expenses = list(session.query(
+                object_type=BankAccount)
+                .where_equals('user_id', user_id))
 
         return [expense.__dict__ for expense in expenses]
 
@@ -31,10 +33,12 @@ class BankAccountService:
 
         return bank.__dict__
 
-    def get_by_name(self, name: str):
+    def get_by_name(self, name: str, user_id: str):
         """Recupera categorias de despesas que correspondem ao nome."""
         with store.open_session() as session:
             banks = list(session.query(
-                object_type=BankAccount).where_equals("name", name))
+                object_type=BankAccount)
+                .where_equals("name", name)
+                .where_equals('user_id', user_id))
 
         return [bank.__dict__ for bank in banks]
