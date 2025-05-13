@@ -11,5 +11,5 @@ class User:
         self.person = person
         self.admin = admin
 
-    def check_password(self, password: str, hashed_password: str) -> bool:
-        return bcrypt.checkpw(password.encode(), hashed_password.encode())
+    def check_password(self, password: str) -> bool:
+        return bcrypt.checkpw(password.encode(), self.password.encode())

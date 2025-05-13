@@ -23,10 +23,10 @@ paths:
             properties:
               username:
                 type: string
-                example: "admin"
+                example: "admin@admin.com"
               password:
                 type: string
-                example: "senha"
+                example: "2112"
       responses:
         200:
           description: "Login bem-sucedido"
@@ -119,3 +119,32 @@ paths:
       responses:
         201:
           description: "Conta bancária criada com sucesso"
+  /Transaction:
+    post:
+      summary: "Criar uma transação"
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              type:
+                type: string
+                example: "Crédito, Debito"
+              amount:
+                type: float
+                example: "Valor da transação"
+              category_id:
+                type: string
+                example: "id"
+              description:
+                type: string
+                example: "Almoço do dia dd/mm/yyyy"
+              data:
+                type: string
+                example: "dd/mm/yyyy"
+      responses:
+        201:
+          description: "Transação criada com sucesso"

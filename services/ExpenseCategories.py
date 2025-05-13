@@ -1,12 +1,10 @@
-import json
 from models.ExpenseCategories import ExpenseCategories
 from db import store
-from flask import  jsonify
 
 class ExpenseCategoriesService:
-    def create(self, data: dict):
+    def create(self, data: dict, user: str):
         """Cria uma nova categoria de despesa a partir de um JSON."""
-        expenseCategorie = ExpenseCategories(**data)
+        expenseCategorie = ExpenseCategories(**data, user=user)
         try:
             with store.open_session() as session:
                 session.store(expenseCategorie)
@@ -15,10 +13,10 @@ class ExpenseCategoriesService:
         except Exception as e:
             return {"message": str(e)}
         
-    def get_all(self):
+    def get_all(self, user: str):
         """Recupera todas as categorias de despesas do banco de dados."""
         with store.open_session() as session:
-            expenses = list(session.query(object_type=ExpenseCategories))
+            expenses = list(session.query(object_type=ExpenseCategories).where_equals('user', user))
         
         return [expense.__dict__ for expense in expenses]  
 

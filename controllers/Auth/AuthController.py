@@ -17,18 +17,15 @@ def login():
         return jsonify({"msg": "Usuário e senha são obrigatórios"}), 400
 
     with store.open_session() as session:
-        user = session.query(object_type=User).where_equals(
-            "username", username).first()
-
-        if not user or not user.check_password(password, user.password):
+        results = list(session.query(object_type=User).where_equals("username", username).take(1))
+        
+        if not results:
             return jsonify({"msg": "Credenciais inválidas"}), 401
-        print(user.id)
+
+        user = results[0]
+        print(user.check_password(password))
+        if not user or not user.check_password(password):
+            return jsonify({"msg": "Credenciais inválidas"}), 401
+
         access_token = create_access_token(identity=user.id)
         return jsonify(access_token=access_token), 200
-
-
-@auth_bp.route('/protected', methods=['GET'])
-@jwt_required()
-def protected():
-    user_id = get_jwt_identity()
-    return jsonify({"msg": "Você está logado!", "user_id": user_id}), 200
