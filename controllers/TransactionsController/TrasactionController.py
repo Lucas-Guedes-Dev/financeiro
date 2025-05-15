@@ -10,7 +10,7 @@ service = TransactionService()
 def create_transactions():
     data = request.get_json()
     user_id = get_jwt_identity()
-    return jsonify(service.create(data, user_id))
+    return service.create(data, user_id)
 
 @transactions_bp.route('/Transaction/All', methods=['GET'])
 @jwt_required()

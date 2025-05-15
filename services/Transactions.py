@@ -1,5 +1,6 @@
 from models.Transactions import Transaction
 from db import store
+from flask import  jsonify
 
 class TransactionService:
     def create(self, data: dict, user: str):
@@ -8,7 +9,8 @@ class TransactionService:
             with store.open_session() as session:
                 session.store(transaction)
                 session.save_changes()
-                return self.get_all(), 201
+            
+            return jsonify({"message": "Transaction createt "}), 201
         except Exception as e:
             return {"message": str(e)}, 500
     
@@ -19,7 +21,7 @@ class TransactionService:
                 object_type=Transaction)
                 .where_equals('user_id', user_id))
 
-        return [transaction.__dict__ for transaction in transactions], 200
+        return [transaction.__dict__ for transaction in transactions]
 
     def get_by_id(self, user_id: str, id: str):
         """Recupera todas as categorias de despesas do banco de dados."""
@@ -32,8 +34,8 @@ class TransactionService:
             
             if not transaction:
                 return {'message': 'Transaction not found'}, 404
-            
-            return transaction.__dict__, 200
+            print(transaction.__dict__)
+            return jsonify(transaction.__dict__), 200
         
     def update(self, user_id: str, id: str, data: dict):
         """Atualiza uma transação existente no banco de dados."""
@@ -50,7 +52,7 @@ class TransactionService:
                 
                 session.save_changes()
                 
-                return transaction.__dict__, 200
+                return jsonify(transaction.__dict__), 200
                 
         except Exception as e:
             return {"message": str(e)}, 500
@@ -62,12 +64,12 @@ class TransactionService:
                 transaction = session.load(id, object_type=Transaction)
                 
                 if not transaction or transaction.user_id != user_id:
-                    return {"message": "Transaction not found or access denied"}, 404
+                    return jsonify({"message": "Transaction not found or access denied"}), 404
                 
                 session.delete(transaction)
                 session.save_changes()
                 
-                return {"message": "Transaction deleted successfully"}
+                return jsonify({"message": "Transaction deleted successfully"}), 200
                 
         except Exception as e:
-            return {"message": str(e)}, 500
+            return jsonify({"message": str(e)}), 500
