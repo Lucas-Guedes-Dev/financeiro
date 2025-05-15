@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   title: "API de Categorias de Despesas"
-  description: "Endpoints para gerenciar categorias de despesas"
+  description: "Endpoints para gerenciar categorias de despesas, contas bancárias e transações"
   version: "1.0.0"
 securityDefinitions:
   BearerAuth:
@@ -114,11 +114,13 @@ paths:
                 type: string
                 example: "Numero da conta"
               balance:
-                type: float
-                example: "Conta para despesas gerais"
+                type: number
+                format: float
+                example: 1000.00
       responses:
         201:
           description: "Conta bancária criada com sucesso"
+
   /Transaction:
     post:
       summary: "Criar uma transação"
@@ -132,19 +134,214 @@ paths:
             properties:
               type:
                 type: string
-                example: "Crédito, Debito"
+                example: "Crédito"
               amount:
-                type: float
-                example: "Valor da transação"
+                type: number
+                format: float
+                example: 50.00
               category_id:
                 type: string
-                example: "id"
+                example: "expenses/1-A"
               description:
                 type: string
-                example: "Almoço do dia dd/mm/yyyy"
-              data:
+                example: "Almoço do dia 15/05/2025"
+              date:
                 type: string
-                example: "dd/mm/yyyy"
+                example: "25/05/2025"
       responses:
         201:
           description: "Transação criada com sucesso"
+          schema:
+            type: array
+            items:
+              properties:
+                id:
+                  type: string
+                user:
+                  type: string
+                type:
+                  type: string
+                amount:
+                  type: number
+                  format: float
+                category_id:
+                  type: string
+                description:
+                  type: string
+                date:
+                  type: string
+
+  /Transaction/All:
+    get:
+      summary: "Recuperar todas as transações"
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: "Lista de transações"
+          schema:
+            type: array
+            items:
+              properties:
+                id:
+                  type: string
+                user:
+                  type: string
+                type:
+                  type: string
+                amount:
+                  type: number
+                  format: float
+                category_id:
+                  type: string
+                description:
+                  type: string
+                date:
+                  type: string
+
+  /Transaction/{id}:
+    get:
+      summary: "Recuperar uma transação por ID"
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: "ID da transação"
+      responses:
+        200:
+          description: "Transação encontrada"
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              user:
+                type: string
+              type:
+                type: string
+              amount:
+                type: number
+                format: float
+              category_id:
+                type: string
+              description:
+                type: string
+              date:
+                type: string
+        404:
+          description: "Transação não encontrada"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Transaction not found"
+
+    put:
+      summary: "Atualizar uma transação"
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: "ID da transação"
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              type:
+                type: string
+                example: "Débito"
+              amount:
+                type: number
+                format: float
+                example: 75.00
+              category_id:
+                type: string
+                example: "expenses/2-A"
+              description:
+                type: string
+                example: "Jantar do dia 15/05/2025"
+              date:
+                type: string
+                format: date
+                example: "2025-05-15"
+      responses:
+        200:
+          description: "Transação atualizada com sucesso"
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              user:
+                type: string
+              type:
+                type: string
+              amount:
+                type: number
+                format: float
+              category_id:
+                type: string
+              description:
+                type: string
+              date:
+                type: string
+        404:
+          description: "Transação não encontrada ou acesso negado"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Transaction not found or access denied"
+        500:
+          description: "Erro interno do servidor"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Internal server error"
+
+    delete:
+      summary: "Excluir uma transação"
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: "ID da transação"
+      responses:
+        200:
+          description: "Transação excluída com sucesso"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Transaction deleted successfully"
+        404:
+          description: "Transação não encontrada ou acesso negado"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Transaction not found or access denied"
+        500:
+          description: "Erro interno do servidor"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Internal server error"
