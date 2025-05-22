@@ -1,9 +1,11 @@
 from models.Transactions import Transaction
 from db import store
 from flask import  jsonify
+from utils.utils import create_id
 
 class TransactionService:
     def create(self, data: dict, user: str):
+        data['id'] = create_id()
         transaction = Transaction(**data, user=user)
         try:
             with store.open_session() as session:
@@ -14,12 +16,12 @@ class TransactionService:
         except Exception as e:
             return {"message": str(e)}, 500
     
-    def get_all(self, user_id: str):
+    def get_all(self, user: str):
         """Recupera todas as categorias de despesas do banco de dados."""
         with store.open_session() as session:
             transactions = list(session.query(
                 object_type=Transaction)
-                .where_equals('user_id', user_id))
+                .where_equals('user', user))
 
         return [transaction.__dict__ for transaction in transactions]
 
@@ -34,7 +36,7 @@ class TransactionService:
             
             if not transaction:
                 return {'message': 'Transaction not found'}, 404
-            print(transaction.__dict__)
+            
             return jsonify(transaction.__dict__), 200
         
     def update(self, user_id: str, id: str, data: dict):

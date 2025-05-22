@@ -2,8 +2,8 @@ import uuid
 from datetime import datetime
 
 class Transaction:
-    def __init__(self, user: str, type: str, amount: float, category_id: str, description: str, date: str):
-        self.id = str(uuid.uuid1())
+    def __init__(self, id, user: str, type: str, amount: float, category_id: str, description: str, date: str):
+        self.id = id,
         self.user = user
         self.type = type  
         self.amount = amount
