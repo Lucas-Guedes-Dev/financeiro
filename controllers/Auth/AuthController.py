@@ -23,7 +23,7 @@ def login():
             return jsonify({"msg": "Credenciais inválidas"}), 401
 
         user = results[0]
-        print(user.check_password(password))
+
         if not user or not user.check_password(password):
             return jsonify({"msg": "Credenciais inválidas"}), 401
 

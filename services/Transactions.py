@@ -5,8 +5,7 @@ from utils.utils import create_id
 
 class TransactionService:
     def create(self, data: dict, user: str):
-        data['id'] = create_id()
-        transaction = Transaction(**data, user=user)
+        transaction = Transaction(**data, id=create_id(), user=user)
         try:
             with store.open_session() as session:
                 session.store(transaction)
@@ -19,9 +18,7 @@ class TransactionService:
     def get_all(self, user: str):
         """Recupera todas as categorias de despesas do banco de dados."""
         with store.open_session() as session:
-            transactions = list(session.query(
-                object_type=Transaction)
-                .where_equals('user', user))
+            transactions = list(session.query(object_type=Transaction).where_equals('user', user))
 
         return [transaction.__dict__ for transaction in transactions]
 
