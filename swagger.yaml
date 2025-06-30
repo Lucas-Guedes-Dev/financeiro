@@ -139,7 +139,7 @@ paths:
                 type: number
                 format: float
                 example: 50.00
-              category_id:
+              category:
                 type: string
                 example: "expenses/1-A"
               bank_account_id:
@@ -167,7 +167,7 @@ paths:
                 amount:
                   type: number
                   format: float
-                category_id:
+                category:
                   type: string
                 bank_account_id:
                   type: string
@@ -197,7 +197,7 @@ paths:
                 amount:
                   type: number
                   format: float
-                category_id:
+                category:
                   type: string
                 bank_account_id:
                   type: string
@@ -232,7 +232,7 @@ paths:
               amount:
                 type: number
                 format: float
-              category_id:
+              category:
                 type: string
               bank_account_id:
                 type: string
@@ -271,7 +271,7 @@ paths:
                 type: number
                 format: float
                 example: 75.00
-              category_id:
+              category:
                 type: string
                 example: "expenses/2-A"
               bank_account_id:
@@ -299,7 +299,7 @@ paths:
               amount:
                 type: number
                 format: float
-              category_id:
+              category:
                 type: string
               description:
                 type: string
