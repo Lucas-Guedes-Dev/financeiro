@@ -2,13 +2,15 @@ from flask import Flask, send_file
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_jwt_extended import JWTManager
 from db import store
-
+from flask_cors import CORS 
 
 def create_app():
     app = Flask(__name__)
     app.config["JWT_SECRET_KEY"] = "na_minha_maquina_funciona"
 
     JWTManager(app)
+    
+    CORS(app, supports_credentials=True) 
 
     from controllers.Auth.AuthController import auth_bp
     from controllers.ExpenseCategoriesController.ExpenseCategories import expense_categories_bp

@@ -15,13 +15,26 @@ class BankAccountService:
             return {"message": str(e)}
 
     def get_all(self, user_id: str):
-        """Recupera todas as categorias de despesas do banco de dados."""
+        """Recupera todas as contas bancárias do usuário com saldo calculado."""
         with store.open_session() as session:
-            expenses = list(session.query(
-                object_type=BankAccount)
-                .where_equals('user_id', user_id))
+            contas = list(session.query(object_type=BankAccount)
+                        .where_equals('user_id', user_id))
+            
+            query_saldo = session.advanced.raw_query("from index 'balance'")
+            saldos_index = list(query_saldo)
+            
+            saldos_por_conta = {
+                saldo['bank_account_id']: saldo['credit'] - saldo['debit']
+                for saldo in saldos_index
+            }
+            
+            contas_formatadas = []
+            for conta in contas:
+                conta_dict = conta.__dict__.copy()
+                conta_dict['balance'] = saldos_por_conta.get(conta.id, 0.0)
+                contas_formatadas.append(conta_dict)
 
-        return [expense.__dict__ for expense in expenses]
+            return contas_formatadas
 
     def get_by_id(self, bank_id: str):
         """Recupera uma categoria de despesa pelo ID."""

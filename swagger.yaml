@@ -142,6 +142,9 @@ paths:
               category_id:
                 type: string
                 example: "expenses/1-A"
+              bank_account_id:
+                type: string
+                example: "bank/1-A"
               description:
                 type: string
                 example: "Almoço do dia 15/05/2025"
@@ -165,6 +168,8 @@ paths:
                   type: number
                   format: float
                 category_id:
+                  type: string
+                bank_account_id:
                   type: string
                 description:
                   type: string
@@ -193,6 +198,8 @@ paths:
                   type: number
                   format: float
                 category_id:
+                  type: string
+                bank_account_id:
                   type: string
                 description:
                   type: string
@@ -226,6 +233,8 @@ paths:
                 type: number
                 format: float
               category_id:
+                type: string
+              bank_account_id:
                 type: string
               description:
                 type: string
@@ -265,6 +274,9 @@ paths:
               category_id:
                 type: string
                 example: "expenses/2-A"
+              bank_account_id:
+                type: string
+                example: "bank/2-A"
               description:
                 type: string
                 example: "Jantar do dia 15/05/2025"
