@@ -357,3 +357,83 @@ paths:
               message:
                 type: string
                 example: "Internal server error"
+
+  /Transaction/Summary:
+    get:
+      summary: "Recuperar resumo financeiro das transações do usuário"
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: "Resumo financeiro retornado com sucesso"
+          schema:
+            type: object
+            properties:
+              quantidade_registros:
+                type: integer
+                example: 10
+              saldo_total:
+                type: number
+                format: float
+                example: 500.00
+              entradas:
+                type: number
+                format: float
+                example: 1000.00
+              saidas:
+                type: number
+                format: float
+                example: 500.00
+              saldos:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    conta:
+                      type: string
+                      example: "Banco do Brasil - 12345-6"
+                    saldo:
+                      type: number
+                      format: float
+                      example: 500.00
+        401:
+          description: "Acesso não autorizado"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized access"
+
+  /Transaction/Monthly/Summary:
+    get:
+      summary: "Recuperar resumo mensal de entradas e saídas do usuário"
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: "Resumo mensal retornado com sucesso"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                month:
+                  type: string
+                  example: "Jan"
+                entrada:
+                  type: number
+                  format: float
+                  example: 1000.00
+                saida:
+                  type: number
+                  format: float
+                  example: 500.00
+        401:
+          description: "Acesso não autorizado"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized access"

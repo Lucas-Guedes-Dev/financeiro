@@ -1,4 +1,5 @@
 from models.BankAccount import BankAccount
+from models.Transactions import Transaction
 from db import store
 
 
@@ -15,19 +16,29 @@ class BankAccountService:
             return {"message": str(e)}
 
     def get_all(self, user_id: str):
-        """Recupera todas as contas bancárias do usuário com saldo calculado."""
+        """Recupera todas as contas bancárias do usuário com saldo calculado a partir das transações."""
         with store.open_session() as session:
+            # Recupera todas as contas bancárias do usuário
             contas = list(session.query(object_type=BankAccount)
                         .where_equals('user_id', user_id))
-            
-            query_saldo = session.advanced.raw_query("from index 'balance'")
-            saldos_index = list(query_saldo)
-            
-            saldos_por_conta = {
-                saldo['bank_account_id']: saldo['credit'] - saldo['debit']
-                for saldo in saldos_index
-            }
-            
+
+            transacoes = list(session.query(object_type=Transaction)
+                            .where_equals('user', user_id))
+
+            saldos_por_conta = {}
+
+            for transacao in transacoes:
+                conta_id = transacao.bank_account_id
+                valor = abs(transacao.amount)
+
+                if conta_id not in saldos_por_conta:
+                    saldos_por_conta[conta_id] = 0.0
+
+                if transacao.type.lower() == 'entrada':
+                    saldos_por_conta[conta_id] += valor
+                elif transacao.type.lower() == 'saida':
+                    saldos_por_conta[conta_id] -= valor
+
             contas_formatadas = []
             for conta in contas:
                 conta_dict = conta.__dict__.copy()

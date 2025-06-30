@@ -36,3 +36,27 @@ def update_transaction(id):
 def delete_transaction(id):
     user_id = get_jwt_identity()
     return jsonify(service.delete(user_id, id))
+
+@transactions_bp.route('/Transaction/Summary', methods=['GET'])
+@jwt_required()
+def get_summary():
+    user_id = get_jwt_identity()
+    return jsonify(service.get_summary(user_id))
+
+@transactions_bp.route('/Transaction/Monthly/Summary', methods=['GET'])
+@jwt_required()
+def get_monthly_summary():
+    user_id = get_jwt_identity()
+    return jsonify(service.get_monthly_summary(user_id))
+
+@transactions_bp.route('/Transaction/Category/Summary', methods=['GET'])
+@jwt_required()
+def get_category_summary():
+    user_id = get_jwt_identity()
+    return jsonify(service.get_category_summary(user_id))
+
+@transactions_bp.route('/Transaction/DRE/Summary', methods=['GET'])
+@jwt_required()
+def get_dre_timeline():
+    user_id = get_jwt_identity()
+    return jsonify(service.get_dre_timeline(user_id))
